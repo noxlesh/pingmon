@@ -1,16 +1,22 @@
-__author__ = 'noxlesh'
-
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
-import re,time,os,thread,BaseHTTPServer
+
+import re
+import time
+import os
+import thread
+import BaseHTTPServer
+
+__author__ = 'noxlesh'
 SRV_HOSTNAME = 'pingmon'
 SRV_PORT = 8080
 HOSTS_LIST = 'servers'
 stats = []
 
+
 def load_host_list(filename):
     stats = []
-    f = open(filename,'r')
+    f = open(filename, 'r')
     lines = f.readlines()
     is_remote = False
     for line in lines:
@@ -26,6 +32,7 @@ def load_host_list(filename):
         else:
             is_remote = True
     return stats
+
 
 class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(s):
@@ -52,7 +59,8 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             #s.wfile.write(s.path)
             s.wfile.write(gen_html(stats,3))
 
-def gen_html(ping_stats,page_refr_time):
+
+def gen_html(ping_stats, page_refr_time):
     html = '<!DOCTYPE html>\n' \
            '<html lang="ru"><head>\n'
     if page_refr_time:# refresh equal zero for debug
@@ -96,6 +104,7 @@ def gen_html(ping_stats,page_refr_time):
             '</body>\n' \
             '</html>\n'
     return html
+
 
 def ping_print(index):
     while 1:
