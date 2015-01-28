@@ -10,7 +10,7 @@ import BaseHTTPServer
 __author__ = 'noxlesh'
 SRV_HOSTNAME = 'pingmon'
 SRV_PORT = 8080
-HOSTS_LIST = 'servers'
+HOSTS_LIST_FILE = 'servers'
 stats = []
 
 
@@ -117,7 +117,7 @@ def ping_print(index):
             stats[index][3] = 'offline'
             time.sleep(1)
 
-stats = load_host_list(HOSTS_LIST)
+stats = load_host_list(HOSTS_LIST_FILE)
 
 for host in stats:
     #print host
