@@ -5,7 +5,7 @@ from config import PMConf
 import pingmon
 import server
 
-conf = PMConf('server')
+conf = PMConf('servers.conf')
 stats = conf.get_stats()
 
 print stats

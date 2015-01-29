@@ -3,7 +3,6 @@ import os
 
 
 class PMConf (object):
-    tables = {}  # Categories of hosts
     stats = {}  # Statistics data
 
     def __init__(self, hosts_file_path, hostname='localhost', port=8080):
@@ -13,23 +12,20 @@ class PMConf (object):
             self.h_file = open(hosts_file_path, 'r')
         else:
             raise Exception('Can\'t open hosts file!')
+        self.load_host_list()
 
     def get_stats(self):
         return self.stats
 
     def load_host_list(self):
-        f = open(self.h_file, 'r')
-        lines = f.readlines()
-        is_remote = False
+        lines = self.h_file.readlines()
         for line in lines:
-            if line != '\r\n':
-                stats_data = line.split(":")
-                stats_data[1] = stats_data[1][:-2:]
-                if not is_remote:
-                    stats_data.append('l')
+            if line.strip() != '':
+                a = line.split(":")
+                a_group = a[0]
+                a_host_desc = a[1]
+                a_host_addr = a[2].strip()
+                if a_group not in self.stats:
+                    self.stats[a_group] = [{a_host_desc: a_host_addr}]
                 else:
-                    stats_data.append('r')
-                stats_data.append('pending')
-                self.stats.append(stats_data)
-            else:
-                is_remote = True
+                    self.stats[a_group].append({a_host_desc: a_host_addr})
