@@ -1,0 +1,27 @@
+body {
+    background-color: #ddd;
+    padding-top: 70px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+}
+/*Host Monitor panels for grouping hosts*/
+.panel-hm {
+    border-radius:0px;
+}
+.panel-hm>.panel-heading {
+    padding: 7px 10px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+.panel-hm>.panel-body {
+    padding: 10px;
+}
+.panel-hm>.panel-body>.table {
+    margin-bottom:0px;
+}
+/*Host Monitor panels end*/
+
+.table-block {
+    border:1px solid #fff;
+    border-radius: 4px;
+}
