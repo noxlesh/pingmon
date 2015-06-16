@@ -1,17 +1,16 @@
-#!/usr/bin/python2
-# -*- coding: utf-8 -*-
+from configmanager import PMConfig
+from statusmanager import PMStatusManager
+import httpserver
+from dbmanager import PMDbManager
 
-from config import PMConf
-import pingmon
-import server
+config = PMConfig()
+db = PMDbManager(config.get_db_config())
+status = PMStatusManager(db)
 
-conf = PMConf('servers.conf')
-stats = conf.get_stats()
-
-print stats
-
-# stats = load_host_list(file)
-#
-# for host in stats:
-#     #print host
-#     thread.start_new_thread(ping_print, (stats.index(host),)
+http_server = httpserver.PMHTTPServer(config.get_pm_address(),
+                                      httpserver.PMHTTPRequestHandler,
+                                      config, db, status)
+try:
+    http_server.serve_forever()
+except KeyboardInterrupt:
+    status.stop_all()

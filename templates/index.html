@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <title>Ping Status</title>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <span class="navbar-brand">Ping Web Monitor</span>
+        </div>
+        <div class="collapse navbar-collapse navbar-right">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/admin">Administration</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div id="first_col" class="col-md-4">
+            % for group in groups:
+                <div class="panel panel-primary panel-hm">
+                    <div class="panel-heading">${group[1]}</div>
+                    <div class="panel-body">
+                        <table class="table table-hm" group="${group[0]}">
+
+                            <tbody>
+                                    % for server in group[2]:
+                                        <tr>
+                                            <td>${server[0]}</td>
+                                            <td>${server[1]}</td>
+                                            <td>Pending</td>
+                                        </tr>
+                                    % endfor
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            % endfor
+        </div>
+        <div id="second_col" class="col-md-4">
+        </div>
+        <div id="third_col" class="col-md-4">
+        </div>
+    </div>
+</div>
+<script src="/jquery.min.js"></script>
+<script src="/jquery.timers.min.js"></script>
+<script src="/bootstrap.min.js"></script>
+<script src="/status.js"></script>
+<script>
+    window.onresize = function() {
+    console.log($( window ).height())
+    };
+</script>
+</body>
+</html>
