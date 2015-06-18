@@ -24,33 +24,40 @@
 </nav>
 <div class="container-fluid">
     <div class="row">
-        <div id="first_col" class="col-md-4">
-            % for group in groups:
-                <div class="panel panel-primary panel-hm">
-                    <div class="panel-heading">${group[1]}</div>
-                    <div class="panel-body">
-                        <table class="table table-hm" group="${group[0]}">
+        <div id="first_col" class="col-md-4"></div>
+        <div id="second_col" class="col-md-4"></div>
+        <div id="third_col" class="col-md-4"></div>
+    % for group in groups:
+        <%
+            panel_index = ''
+            if (loop.index+1) % 3 == 0:
+                panel_index = 'third_col'
+            elif (loop.index+1) % 2 == 0:
+                panel_index = 'second_col'
+            elif (loop.index+1) % 1 == 0:
+                panel_index = 'first_col'
+            %>
+            <div class="panel panel-primary panel-hm" col="${panel_index}">
+                <div class="panel-heading">${group[1]}</div>
+                <div class="panel-body">
+                    <table class="table table-hm" group="${group[0]}">
 
-                            <tbody>
-                                    % for server in group[2]:
-                                        <tr>
-                                            <td>${server[0]}</td>
-                                            <td>${server[1]}</td>
-                                            <td>Pending</td>
-                                        </tr>
-                                    % endfor
-                            </tbody>
-                        </table>
-                    </div>
+                        <tbody>
+                        % for server in group[2]:
+                        <tr>
+                            <td>${server[0]}</td>
+                            <td>${server[1]}</td>
+                            <td>Pending</td>
+                        </tr>
+                        % endfor
+                        </tbody>
+                    </table>
                 </div>
-            % endfor
+            </div>
         </div>
-        <div id="second_col" class="col-md-4">
-        </div>
-        <div id="third_col" class="col-md-4">
-        </div>
-    </div>
+    % endfor
 </div>
+
 <script src="/jquery.min.js"></script>
 <script src="/jquery.timers.min.js"></script>
 <script src="/bootstrap.min.js"></script>

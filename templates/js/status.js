@@ -21,3 +21,7 @@ $('.table-hm').each(function(index, element) {
     });
 });
 
+$('.panel-hm').each(function() {
+    index = $(this).attr('col')
+    $(this).appendTo('#'+index)
+});
