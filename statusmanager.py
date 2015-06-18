@@ -52,6 +52,7 @@ class PMStatusManager:
         for group in self.storage:
             for server in self.storage[group]:
                 self.storage[group][server].stop()
+        self.storage = {}
 
     def restart(self):
         self.stop_all()
