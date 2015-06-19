@@ -89,6 +89,7 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
             if self.headers['content-type'].lower().startswith('application/x-www-form-urlencoded'):
                 length = int(self.headers['content-length'])
                 params = parse_qs(self.rfile.read(length).decode(), keep_blank_values=True)
+                print(params)
                 if 'delete' in params:
                     for group_id in params['delete']:
                         self.db.del_group(int(group_id))
@@ -96,6 +97,10 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
                     self.redirect('/admin')
                 elif 'add' in params:
                     self.db.add_group(params['add'][0].capitalize())
+                    self.status.restart()
+                    self.redirect('/admin')
+                elif 'edit' in params:
+                    self.db.edit_group(params['group_id'][0], params['edit'][0])
                     self.status.restart()
                     self.redirect('/admin')
                 else:

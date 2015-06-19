@@ -28,6 +28,14 @@ class PMDbManager:
         self.connection.commit()
         cursor.close()
 
+    def edit_group(self, group_id, new_name):
+        self.connect_if_not()
+        cursor = self.connection.cursor()
+        add_srv_query = ("UPDATE groups SET name='{}' WHERE id={}".format(new_name, group_id))
+        cursor.execute(add_srv_query)
+        self.connection.commit()
+        cursor.close()
+
     def del_group(self, group_id):
         self.connect_if_not()
         cursor = self.connection.cursor()
