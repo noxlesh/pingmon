@@ -38,20 +38,32 @@ class PMStatusManager:
         self.start_all()
 
     def start_all(self):
+        """
+        Starts all ping threads
+        """
         for i in self.db.get_servers():
+            s = (i[0], PMPingThread(i[1]))
             if i[2] not in self.storage:
-                self.storage[i[2]] = {i[0]:PMPingThread(i[1])}
+
+                self.storage[i[2]] = [s]
             else:
-                self.storage[i[2]][i[0]] = PMPingThread(i[1])
+                self.storage[i[2]].append(s)
+        print(self.storage)
 
     def get_group(self, group_id):
-        return  self.storage[int(group_id)]
-
+        """
+        :param group_id:
+        :return: list of tuples (server_name, server_status) owned by group
+        """
+        return self.storage[int(group_id)]
 
     def stop_all(self):
+        """
+        Stops all ping threads
+        """
         for group in self.storage:
             for server in self.storage[group]:
-                self.storage[group][server].stop()
+                server[1].stop()
         self.storage = {}
 
     def restart(self):
