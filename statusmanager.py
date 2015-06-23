@@ -35,9 +35,9 @@ class PMStatusManager:
     def __init__(self, db_manager: PMDbManager):
         self.db = db_manager
         self.storage = {}
-        self.start_all()
+        self.start()
 
-    def start_all(self):
+    def start(self):
         """
         Starts all ping threads
         """
@@ -57,7 +57,7 @@ class PMStatusManager:
         """
         return self.storage[int(group_id)]
 
-    def stop_all(self):
+    def stop(self):
         """
         Stops all ping threads
         """
@@ -67,5 +67,5 @@ class PMStatusManager:
         self.storage = {}
 
     def restart(self):
-        self.stop_all()
-        self.start_all()
+        self.stop()
+        self.start()

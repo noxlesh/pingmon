@@ -8,7 +8,7 @@ var last_checked_id = 0;
 
     // Assign to each checkbox action witch control edit button state and group_id for edit form
     $('.check').each(function () {
-        console.log($(this).attr('value'));
+        //console.log($(this).attr('value'));
         $(this).click( function () {
             if ($(this).is(':checked')) {
                 checked_count++;
@@ -19,8 +19,15 @@ var last_checked_id = 0;
                 checked_count--;
                 change_edit_btn_state();
             }
-        console.log(checked_count)
+        //console.log(checked_count)
         });
+    });
+
+    // Reset checked items correctly
+    $('#reset').click( function() {
+        checked_count = 0;
+        last_checked_id = 0;
+        change_edit_btn_state()
     });
 
     // Activate edit button if only one group checked

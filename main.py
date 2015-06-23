@@ -13,4 +13,4 @@ http_server = httpserver.PMHTTPServer(config.get_pm_address(),
 try:
     http_server.serve_forever()
 except KeyboardInterrupt:
-    status.stop_all()
+    status.stop()
