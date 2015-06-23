@@ -100,7 +100,9 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
                     self.status.restart()
                     self.redirect('/admin')
                 elif 'edit' in params:
-                    self.db.edit_group(params['group_id'][0], params['edit'][0])
+                    group_id = params['group_id'][0]
+                    new_name = params['edit'][0]
+                    self.db.edit_group(group_id, new_name)
                     self.status.restart()
                     self.redirect('/admin')
                 else:
@@ -121,6 +123,13 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
                         name = params['add'][0].capitalize()
                         address = params['address'][0]
                         self.db.add_server(group_id, name, address)
+                        self.status.restart()
+                        self.redirect('/admin/{}'.format(group_id))
+                    elif 'edit' in params:
+                        desc = params['edit'][0]
+                        addr = params['address'][0]
+                        server_id = params['server_id'][0]
+                        self.db.edit_server(server_id, desc, addr)
                         self.status.restart()
                         self.redirect('/admin/{}'.format(group_id))
         # If received params are unknown

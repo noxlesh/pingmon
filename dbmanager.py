@@ -36,6 +36,15 @@ class PMDbManager:
         self.connection.commit()
         cursor.close()
 
+    def edit_server(self, server_id, new_desc, new_addr):
+        self.connect_if_not()
+        cursor = self.connection.cursor()
+        add_srv_query = ("UPDATE servers SET name='{}', address='{}' WHERE server_id={}".format(new_desc, new_addr, server_id))
+        cursor.execute(add_srv_query)
+        self.connection.commit()
+        cursor.close()
+
+
     def del_group(self, group_id):
         self.connect_if_not()
         cursor = self.connection.cursor()

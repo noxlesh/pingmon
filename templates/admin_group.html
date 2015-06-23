@@ -31,6 +31,9 @@
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addForm">
                     Add new server
                 </button>
+                <button id="edit_btn" class="btn btn-sm" data-toggle="modal" data-target="#editForm" disabled="disabled">
+                    Edit
+                </button>
                 <button form="delete" type="submit" class="btn btn-danger btn-sm">Delete selected</button>
                 <button form="delete" type="reset" class="btn btn-sm">Deselect all</button>
             </div>
@@ -50,7 +53,7 @@
                         <tr>
                             <td>${server[0]}</td>
                             <td>${server[1]}</td>
-                            <td><input type="checkbox" name="delete" value="${server[2]}"></td>
+                            <td><input class="check" type="checkbox" name="delete" value="${server[2]}"></td>
                         </tr>
                         % endfor
                         </tbody>
@@ -84,8 +87,31 @@
             </div>
         </div>
     </div>
+</div><div class="modal fade" id="editForm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Specify new description and/or address</h4>
+            </div>
+            <div class="modal-body">
+                <form id="edit" class="form-inline" action="/admin/${group_id}" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Server descr." name="edit">
+                        <input type="text" class="form-control" placeholder="Address" name="address">
+                        <input id="id" type="hidden" name="server_id" value="">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button form="edit" type="submit" class="btn btn-primary">Edit</button>
+            </div>
+        </div>
+    </div>
 </div>
-<script src="/jquery.min.js"></script>
-<script src="/bootstrap.min.js"></script>
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="/bootstrap.min.js"></script>
+<script type="text/javascript" src="/admin.js"></script>
 </body>
 </html>
