@@ -48,7 +48,7 @@ class PMStatusManager:
                 self.storage[i[2]] = [s]
             else:
                 self.storage[i[2]].append(s)
-        print(self.storage)
+        #print(self.storage)
 
     def get_group(self, group_id):
         """
