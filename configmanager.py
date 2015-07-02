@@ -6,7 +6,7 @@ import json
 class PMConfig(object):
     def __init__(self, config_filename="config.json"):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.file_path = current_dir + config_filename
+        self.file_path = '{}/{}'.format(current_dir, config_filename)
         if os.path.exists(config_filename):
             with open(self.file_path, 'r') as config_file:
                 self.props = json.load(config_file)
