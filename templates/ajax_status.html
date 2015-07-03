@@ -1,5 +1,9 @@
 % for server in group:
+    % if server[1].status == "offline":
+    <tr class="danger">
+    % else:
     <tr>
+    % endif
         <td>${server[0]}</td>
         <td>${server[1].server}</td>
         <td>${server[1].status}</td>
