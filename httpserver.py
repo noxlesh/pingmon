@@ -1,8 +1,7 @@
 import http.server as http
 from mako.template import Template
-from urllib.parse import parse_qs, unquote
+from urllib.parse import parse_qs
 
-tpl_path = lambda req_path: "templates{}".format(req_path)
 str_to_byte = lambda unicode_string: bytes(unicode_string, 'UTF-8')
 
 
@@ -19,60 +18,59 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
         self.config = server.config
         self.status = server.status
         self.db = server.db
+        self.tpl_path = "{}/templates".format(self.config.working_dir)
         super().__init__(request, client_address, server)
 
-    # GET requests router
+    # GET request router
     def do_GET(self):
+        # Favicon file req.
         if self.path == '/favicon.ico':
-            file = open(tpl_path(self.path), 'rb')
             self.response_headers(200, "image/x-icon")
-            self.wfile.write(file.read())
-            file.close()
+            with open(self.tpl_path + self.path, 'rb') as ico_file:
+                self.wfile.write(ico_file.read())
+        # Javascript file req.
         elif self.path.endswith('.js'):
-            file = open(tpl_path("/js" + self.path), 'rb')
             self.response_headers(200, "application/javascript")
-            self.wfile.write(file.read())
-            file.close()
+            with open("{}/js{}".format(self.tpl_path, self.path), 'rb') as js_file:
+                self.wfile.write(js_file.read())
+        # CSS file req.
         elif self.path.endswith('.css'):
-            file = open(tpl_path("/css" + self.path), 'rb')
             self.response_headers(200, "text/css")
-            self.wfile.write(file.read())
-            file.close()
+            with open("{}/css{}".format(self.tpl_path, self.path), 'rb') as css_file:
+                self.wfile.write(css_file.read())
+        # Dynamic content response
         else:
+            tpl_file = '404.html'                       # If request will be invalid
+            tpl_data = {'requested_url': self.path}     #
+            # Site root alias to status page
             if self.path == '/':
                 self.path = '/index'
-            # Status page
+            # Status page req.
             if self.path == '/index':
-                data = {'groups': self.db.get_grouped_servers()}
-            # Groups page
+                tpl_data = {'groups': self.db.get_grouped_servers()}
+                tpl_file = 'index.html'
+            # Groups page req.
             elif self.path == '/admin':
-                data = {'groups': self.db.get_group_list()}
-            # Servers page
+                tpl_data = {'groups': self.db.get_group_list()}
+                tpl_file = 'admin.html'
+            # Servers page req.
             elif self.path.startswith('/admin/'):
                 group_id = int(self.path[7::])
                 print(group_id)
                 if group_id in self.db.get_group_list(id_list=True):
-                    data = {'servers': self.db.get_servers(group_id),
-                            'name': self.db.get_group_name(group_id),
-                            'group_id': group_id}
-                    self.path = "/admin_group"
-                else:
-                    data = {'requested_url': self.path}
-                    self.path = '/404'
-            else:
-                data = {'requested_url': self.path}
-                self.path = '/404'
-            template = Template(filename='templates{}.html'.format(self.path))
-            html = template.render(**data)
-            self.response_headers(200, "text/html")
+                    tpl_data = {'servers': self.db.get_servers(group_id),
+                                'name': self.db.get_group_name(group_id),
+                                'group_id': group_id}
+                    tpl_file = 'admin_group.html'
+            # Generate html and respond
+            template = Template(filename='{}/{}'.format(self.tpl_path, tpl_file))
+            html = template.render(**tpl_data)
+            self.response_headers(200 if tpl_file != '404.html' else 404, "text/html")
             self.wfile.write(str_to_byte(html))
 
-    # POST requests router
+    # POST request router
     def do_POST(self):
-        print(self.path)
-        print(self.headers['content-type'].lower())
-        #
-        # If received from the AJAX
+        # Status page req.
         if self.path == '/index':
             if self.headers['content-type'].lower().startswith('application/x-www-form-urlencoded'):
                 length = int(self.headers['content-length'])
@@ -80,11 +78,11 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
                 if 'group' in params:
                     group_id = params['group'][0]
                     data = {'group': self.server.status.get_group(group_id)}
-                    template = Template(filename='templates/ajax_status.html')
+                    template = Template(filename='{}/ajax_status.html'.format(self.tpl_path))
                     html = template.render(**data)
                     self.response_headers(200, "text/html")
                     self.wfile.write(str_to_byte(html))
-        # If  received from the admin form
+        # Admin form req.
         elif self.path == '/admin':
             if self.headers['content-type'].lower().startswith('application/x-www-form-urlencoded'):
                 length = int(self.headers['content-length'])
@@ -107,7 +105,7 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
                     self.redirect('/admin')
                 else:
                     self.response_headers(404, "text/html")
-        # If received from the server form
+        # Server form req.
         elif self.path.startswith('/admin/'):
             group_id = int(self.path[7::])
             if group_id in self.db.get_group_list(id_list=True):
@@ -132,7 +130,7 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
                         self.db.edit_server(server_id, desc, addr)
                         self.status.restart()
                         self.redirect('/admin/{}'.format(group_id))
-        # If received params are unknown
+        # Invalid req.
         else:
             self.response_headers(404, "text/html")
             self.wfile.write(str_to_byte('Invalid request!'))
@@ -142,8 +140,8 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
         self.send_response(resp_code)
         self.send_header("Content-type", content_type)
         self.end_headers()
-
+    # HTTP redirect
     def redirect(self, location):
-        self.send_response(301,message='Moved permanently')
+        self.send_response(301, message='Moved permanently')
         self.send_header('Location', '{}'.format(location))
         self.end_headers()
