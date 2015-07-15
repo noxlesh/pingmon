@@ -26,12 +26,12 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
-            <form id="delete" action="/admin" method="post">
+            <form id="delete" action="/admin" method="post"></form>
             <div class="panel panel-primary">
                 <div class="panel-heading">Groups
                     <div class="btn-group btn-group-panel pull-right">
                         <button form="delete" type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        <button id="reset" form="delete" type="reset" class="btn btn-info btn-sm">Deselect</button>
+                        <button form="delete" type="reset" class="btn btn-info btn-sm">Deselect</button>
                     </div>
                     <div class="pull-right">&nbsp;</div>
                     <div class="btn-group btn-group-panel pull-right">
@@ -51,14 +51,14 @@
                         % for group in groups:
                         <tr>
                             <td><a href="admin/${group[0]}">${group[1]}</a></td>
-                            <td class="checkbox-col"><input class="check" type="checkbox" name="delete" value="${group[0]}"></td>
+                            <td class="checkbox-col">
+                                <input form="delete" class="check" type="checkbox" name="delete" value="${group[0]}">
+                            </td>
                         </tr>
                         % endfor
                         </tbody>
                     </table>
-
             </div>
-                </form>
         </div>
     </div>
 </div>
