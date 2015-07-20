@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/main.css">
     <title>Edit group ${name}</title>
 </head>
+<body>
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -27,38 +28,36 @@
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <form id="delete" action="/admin/${group_id}" method="post"></form>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">Servers
-                        <div class="btn-group btn-group-panel pull-right">
-                            <button form="delete" type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            <button id="reset" form="delete" type="reset" class="btn  btn-info btn-sm">Deselect</button>
-                        </div>
-                        <div class="pull-right">&nbsp;</div>
-                        <div class="btn-group btn-group-panel pull-right">
-                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addForm">
-                                Add
-                            </button>
-                            <button id="edit_btn" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editForm" disabled="disabled">
-                                Edit
-                            </button>
-                        </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Servers
+                    <div class="btn-group btn-group-panel pull-right">
+                        <button form="delete" type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        <button id="reset" form="delete" type="reset" class="btn  btn-info btn-sm">Deselect</button>
                     </div>
-                    <div>
-                        <table class="table">
-                            <tbody>
-                            % for server in servers:
-                            <tr>
-                                <td>${server[0]}</td>
-                                <td>${server[1]}</td>
-                                <td class="checkbox-col">
-                                    <input form="delete" class="check" type="checkbox" name="delete" value="${server[2]}">
-                                </td>
-                            </tr>
-                            % endfor
-                            </tbody>
-                        </table>
+                    <div class="pull-right">&nbsp;</div>
+                    <div class="btn-group btn-group-panel pull-right">
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addForm">
+                            Add
+                        </button>
+                        <button id="edit_btn" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editForm" disabled="disabled">
+                            Edit
+                        </button>
                     </div>
                 </div>
+                <table class="table">
+                    <tbody>
+                    % for server in servers:
+                    <tr>
+                        <td>${server[0]}</td>
+                        <td>${server[1]}</td>
+                        <td class="checkbox-col">
+                            <input form="delete" class="check" type="checkbox" name="delete" value="${server[2]}">
+                        </td>
+                    </tr>
+                    % endfor
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

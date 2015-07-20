@@ -15,6 +15,7 @@ class PMHTTPServer(http.HTTPServer):
 
 class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server):
+        self.timeout = 5
         self.config = server.config
         self.status = server.status
         self.db = server.db

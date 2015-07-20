@@ -11,7 +11,7 @@ $('.panel-hm').each(function(index) {
     });
 });
 
-/* Iteration over each the group element and periodic receiving theirs data using AJAX */
+/* Iteration over each group element and periodic receiving theirs data using AJAX */
 $('.table-hm').each(function(index, element) {
     $(element).everyTime('5s',function() {
         group_id = $(element).attr('group')
