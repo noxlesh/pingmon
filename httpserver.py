@@ -15,12 +15,12 @@ class PMHTTPServer(http.HTTPServer):
 
 class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server):
-        self.timeout = 5
         self.config = server.config
         self.status = server.status
         self.db = server.db
         self.tpl_path = "{}/templates".format(self.config.working_dir)
         super().__init__(request, client_address, server)
+        self.timeout = 10
 
     # GET request router
     def do_GET(self):
