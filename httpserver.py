@@ -1,4 +1,5 @@
 import http.server as http
+import socket
 from mako.template import Template
 from urllib.parse import parse_qs
 
@@ -11,6 +12,17 @@ class PMHTTPServer(http.HTTPServer):
         self.status = status
         self.db = db
         super().__init__(server_address, RequestHandlerClass)
+
+    def get_request(self):
+        self.socket.settimeout(5.0)
+        result = None
+        while result is None:
+            try:
+                result = self.socket.accept()
+            except socket.timeout:
+                pass
+        result[0].settimeout(None)
+        return  result
 
 
 class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
@@ -41,7 +53,7 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
                 self.wfile.write(css_file.read())
         # Dynamic content response
         else:
-            tpl_file = '404.html'                       # If request will be invalid
+            tpl_file = '404.html'                       # If request is invalid
             tpl_data = {'requested_url': self.path}     #
             # Site root alias to status page
             if self.path == '/':
