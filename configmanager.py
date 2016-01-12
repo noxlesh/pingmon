@@ -26,3 +26,11 @@ class PMConfig(object):
 
     def get_db_config(self):
         return self.props['db']
+
+    def set_db_config(self, db_name, db_user, db_pass):
+        self.props['db']['database'] = db_name
+        self.props['db']['user'] = db_user
+        self.props['db']['password'] = db_pass
+        self.props['db']['host'] = 'localhost'
+        self.save()
+

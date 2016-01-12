@@ -1,10 +1,10 @@
 {
   "address": "",
-  "port": 8080,
   "db": {
     "database": "pmon",
-    "user": "pmonit",
-    "password": "123456",
-    "host" : "127.0.0.1"
-  }
+    "host": "localhost",
+    "password": "asshol3",
+    "user": "pmon"
+  },
+  "port": 8080
 }
