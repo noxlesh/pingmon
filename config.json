@@ -1,10 +1,10 @@
 {
   "address": "",
   "db": {
-    "database": "pmon",
-    "host": "localhost",
-    "password": "asshol3",
-    "user": "pmon"
+    "database": "",
+    "host": "",
+    "password": "",
+    "user": ""
   },
   "port": 8080
 }
