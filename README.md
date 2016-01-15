@@ -1,5 +1,5 @@
 # Ping Web Monitor
-The web application helps to monitor hosts availability using ping program (Only if remote host can reply 
+The web application helps to monitor the hosts availability using ping program (Only if remote host can reply 
 on ICMP request). It is written on Python v3.4, has build-in web server and uses MySQL as data storage.
 By now it can run on GNU Linux.
 
