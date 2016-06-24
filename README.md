@@ -5,7 +5,7 @@ It's tested on GNU Linux only.
 
 # Requirements
 Before you run Ping Web Monitor you need ***mysql-connector*** and ***mako*** modules installed into your system.
-For Ubuntu 14.04 and above you can install ***python3-mysql-connector*** and ***python3-mako*** packages.Also required the MySQL 
+For Ubuntu 14.04 and above you can install ***python3-mysql.connector*** and ***python3-mako*** packages.Also required the MySQL 
 database server. 
 
 # Startup
