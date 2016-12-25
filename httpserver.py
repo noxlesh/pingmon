@@ -13,17 +13,6 @@ class PMHTTPServer(http.HTTPServer):
         self.db = db
         super().__init__(server_address, RequestHandlerClass)
 
-    def get_request(self):
-        self.socket.settimeout(5.0)
-        result = None
-        while result is None:
-            try:
-                result = self.socket.accept()
-            except socket.timeout:
-                pass
-        result[0].settimeout(None)
-        return  result
-
 
 class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server):
@@ -31,9 +20,9 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
         self.status = server.status
         self.db = server.db
         self.tpl_path = "{}/templates".format(self.config.working_dir)
-        super().__init__(request, client_address, server)
         self.timeout = 10
-
+        super().__init__(request, client_address, server)
+        
     # GET request router
     def do_GET(self):
         # Favicon file req.
