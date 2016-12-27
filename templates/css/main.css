@@ -101,3 +101,9 @@ body {
 .status-col {
     width:80px;
 }
+
+.move .min {
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+}

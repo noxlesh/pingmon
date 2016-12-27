@@ -1,15 +1,24 @@
 
 /*This making panels inner hideable by clicking on theirs header */
 $('.panel-hm').each(function(index) {
-    $(this).children('.panel-heading').click(function() {
-        pb = $(this).siblings('.panel-body')[0] /*gets object of current panel body*/
+    mm = $(this).children('.panel-heading').find('.minmax');
+    mm.click(function() {
+        pb = $(this).parent().parent().siblings('.panel-body')[0];
         if($(pb).is(':hidden')) {
-            $(pb).slideDown()
+            $(pb).slideDown();
+            $(this).text("-");
         } else {
-            $(pb).slideUp()
+            $(pb).slideUp();
+            $(this).text("+");
         }
     });
 });
+
+
+$("#first_col, #second_col, #third_col").sortable({
+    connectWith: '.sortconn',
+    handle: '.move'
+}).disableSelection();
 
 /* Iteration over each group element and periodic receiving theirs data using AJAX */
 $('.table-hm').each(function(index, element) {

@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="/bootstrap.min.css">
     <link rel="stylesheet" href="/main.css">
     <title>Ping Status</title>
+    <style type="text/css">
+        #first_col, #second_col, #third_col {
+            min-height: 20px;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -24,9 +29,9 @@
 </nav>
 <div class="container-fluid">
     <div class="row">
-        <div id="first_col" class="col-md-4"></div>
-        <div id="second_col" class="col-md-4"></div>
-        <div id="third_col" class="col-md-4"></div>
+        <div id="first_col" class="col-md-4 sortconn"></div>
+        <div id="second_col" class="col-md-4 sortconn"></div>
+        <div id="third_col" class="col-md-4 sortconn"></div>
     % for group in groups:
         <%
             panel_index = ''
@@ -38,7 +43,13 @@
                 panel_index = 'first_col'
             %>
             <div class="panel panel-primary panel-hm" col="${panel_index}">
-                <div class="panel-heading">${group[1]}</div>
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-9">${group[1]}</div>
+                        <div class="move col-xs-1">MV</div>
+                        <div class="minmax col-xs-1">-</div> 
+                    </div>
+                </div>
                 <div class="panel-body">
                     <table class="table table-hm" group="${group[0]}">
 
@@ -61,7 +72,9 @@
 <script src="/jquery.min.js"></script>
 <script src="/jquery.timers.min.js"></script>
 <script src="/bootstrap.min.js"></script>
+<script src="/jquery-ui.min.js"></script>
 <script src="/status.js"></script>
+
 <script>
     window.onresize = function() {
     console.log($( window ).height())
