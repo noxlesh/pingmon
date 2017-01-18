@@ -2,7 +2,7 @@ from dbmanager import PMDbManager
 import threading
 import re
 import time
-import os
+from subprocess import getstatusoutput as gso
 
 
 class PMPingThread:
@@ -18,13 +18,21 @@ class PMPingThread:
         while True:
             if self.stopped:
                 break
-            ping_output = os.popen('ping -W 2 -c 1 ' + self.server).read()
-            host_state = re.search('time=(\d+\.*\d+\s)ms', ping_output)
-            if host_state is not None:
+            ping_status_output = gso('ping -W 2 -c 1 ' + self.server)
+            if ping_status_output[0] == 0:
+                host_state = re.search('time=(\d+\.*\d+\s)ms', ping_status_output[1])
+                if host_state is not None:
+                    time.sleep(self.cycle_pause)
+                    self.status = '{} ms'.format(host_state.group(1))
+            elif ping_status_output[0] == 1:
+                    self.status = 'offline'
+            elif ping_status_output[0] == 2:
                 time.sleep(self.cycle_pause)
-                self.status = '{} ms'.format(host_state.group(1))
-            else:
-                self.status = 'offline'
+                if ping_status_output[1].find('unknown host'):
+                    self.status = 'unk host'
+                elif ping_status_output[1].find('connect:'):
+                    self.status = 'no net'
+
 
     def stop(self):
         self.cycle_pause = 0
@@ -48,7 +56,6 @@ class PMStatusManager:
                 self.storage[i[2]] = [s]
             else:
                 self.storage[i[2]].append(s)
-        #print(self.storage)
 
     def get_group(self, group_id):
         """
