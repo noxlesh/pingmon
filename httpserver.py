@@ -11,7 +11,7 @@ class PMHTTPServer(ForkingMixIn, http.HTTPServer):
     def __init__(self, server_address, RequestHandlerClass, config, db, status):
         self.config = config
         self.status = status
-        socket.setdefaulttimeout(10.0) # globally set the timeout for a socket object 
+        #socket.setdefaulttimeout(10.0) # globally set the timeout for a socket object 
         self.db = db
         super().__init__(server_address, RequestHandlerClass)
 
