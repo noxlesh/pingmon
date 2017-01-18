@@ -1,4 +1,5 @@
 import http.server as http
+from socketserver import ForkingMixIn
 import socket
 from mako.template import Template
 from urllib.parse import parse_qs
@@ -6,12 +7,16 @@ from urllib.parse import parse_qs
 str_to_byte = lambda unicode_string: bytes(unicode_string, 'UTF-8')
 
 
-class PMHTTPServer(http.HTTPServer):
+class PMHTTPServer(ForkingMixIn, http.HTTPServer):
     def __init__(self, server_address, RequestHandlerClass, config, db, status):
         self.config = config
         self.status = status
+        socket.setdefaulttimeout(10.0) # globally set the timeout for a socket object 
         self.db = db
         super().__init__(server_address, RequestHandlerClass)
+
+    def finish_request(self, request, client_address):
+        http.HTTPServer.finish_request(self, request, client_address)
 
 
 class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
@@ -20,11 +25,12 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
         self.status = server.status
         self.db = server.db
         self.tpl_path = "{}/templates".format(self.config.working_dir)
-        self.timeout = 10
         super().__init__(request, client_address, server)
+        print("Default socket timeout: %s" % socket.getdefaulttimeout())
         
     # GET request router
     def do_GET(self):
+        print("Timeout at req handler: %s" % self.request.gettimeout())
         # Favicon file req.
         if self.path == '/favicon.ico':
             self.response_headers(200, "image/x-icon")
@@ -37,9 +43,10 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
                 self.wfile.write(js_file.read())
         # CSS file req.
         elif self.path.endswith('.css'):
-            self.response_headers(200, "text/css")
             with open("{}/css{}".format(self.tpl_path, self.path), 'rb') as css_file:
-                self.wfile.write(css_file.read())
+                css_data = css_file.read()
+                self.response_headers(200, "text/css", len(css_data))
+                self.wfile.write(css_data)
         # Dynamic content response
         else:
             tpl_file = '404.html'                       # If request is invalid
@@ -138,9 +145,11 @@ class PMHTTPRequestHandler(http.BaseHTTPRequestHandler):
             self.wfile.write(str_to_byte('Invalid request!'))
 
     # HTTP headers
-    def response_headers(self, resp_code, content_type):
+    def response_headers(self, resp_code, content_type, content_len=None):
         self.send_response(resp_code)
         self.send_header("Content-type", content_type)
+        if content_len != None:
+            self.send_header("Content-lenght", content_len)
         self.end_headers()
     # HTTP redirect
     def redirect(self, location):
